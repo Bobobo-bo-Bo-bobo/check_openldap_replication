@@ -11,6 +11,7 @@ This program comes with ABSOLUTELY NO WARRANTY.
 Public License Version 3. (http://www.gnu.org/copyleft/gpl.html)
 
 Build with go version: %s
+
 `
 
 const defaultWarnDifference = 10
@@ -37,6 +38,7 @@ const helpText = `Usage: %s --base=<base> [--ca-cert=<file>] [--critical=<sec>] 
 
   --warning=<sec>   Report warning state if difference is <sec> or higher.
                     Default: %d
+
 `
 
 const (
