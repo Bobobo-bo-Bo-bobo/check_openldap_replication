@@ -34,11 +34,11 @@ func connect(a string, ssl bool, i bool, ca string) (*ldap.Conn, error) {
 			}
 
 			c, err = ldap.DialTLS("tcp", a, tlscfg)
-            return c, err
+			return c, err
 		}
 
 	}
-    c, err = ldap.Dial("tcp", a)
+	c, err = ldap.Dial("tcp", a)
 	return c, err
 }
 
