@@ -1,0 +1,10 @@
+bin
+src/golang.org/
+src/github.com/
+src/gopkg.in/
+pkg
+*.swp
+tmp/
+*.orig
+*.rej
+
