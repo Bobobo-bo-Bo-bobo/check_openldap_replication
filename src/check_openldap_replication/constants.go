@@ -1,7 +1,7 @@
 package main
 
 const name = "check_openldap_replication"
-const version = "1.0.0"
+const version = "1.0.1-20200806"
 
 const versionText = `%s version %s
 Copyright (C) 2020 by Andreas Maus <maus@ypbind.de>

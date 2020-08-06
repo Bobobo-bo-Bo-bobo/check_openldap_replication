@@ -22,7 +22,7 @@ func main() {
 	flag.Parse()
 
 	if len(flag.Args()) > 0 {
-		fmt.Fprintln(os.Stderr, "Error: Too many arguments")
+		fmt.Fprintln(os.Stderr, "Error: Too many arguments. Use --help to see a list of all parameters.")
 		os.Exit(UNKNOWN)
 	}
 
@@ -37,15 +37,15 @@ func main() {
 	}
 
 	if *base == "" {
-		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP search base")
+		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP search base. Use --help to see a list of all parameters.")
 		os.Exit(UNKNOWN)
 	}
 	if *master == "" {
-		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP master URI")
+		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP master URI. Use --help to see a list of all parameters.")
 		os.Exit(UNKNOWN)
 	}
 	if *slave == "" {
-		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP slave URI")
+		fmt.Fprintln(os.Stderr, "Error: Missing mandatory parameter for LDAP slave URI. Use --help to see a list of all parameters.")
 		os.Exit(UNKNOWN)
 	}
 
