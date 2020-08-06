@@ -5,51 +5,46 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"strings"
 	"time"
 
 	ldap "gopkg.in/ldap.v3"
 )
 
-func connect(a string, ssl bool, i bool, ca string) (*ldap.Conn, error) {
+func connect(u string, i bool, ca string, t time.Duration) (*ldap.Conn, error) {
 	var c *ldap.Conn
 	var err error
 
-	if ssl {
-		tlscfg := &tls.Config{}
+	dc := &net.Dialer{Timeout: t}
+	tlscfg := &tls.Config{}
 
-		if i {
-			tlscfg.InsecureSkipVerify = true
-		}
+	if i {
+		tlscfg.InsecureSkipVerify = true
+	}
 
-		if ca != "" {
-			tlscfg.RootCAs = x509.NewCertPool()
-			cadata, err := ioutil.ReadFile(ca)
-			if err != nil {
-				return c, err
-			}
-			tlsok := tlscfg.RootCAs.AppendCertsFromPEM(cadata)
-			if !tlsok {
-				return c, fmt.Errorf("Internal error while adding CA data to CA pool")
-			}
-
-			c, err = ldap.DialTLS("tcp", a, tlscfg)
+	if ca != "" {
+		tlscfg.RootCAs = x509.NewCertPool()
+		cadata, err := ioutil.ReadFile(ca)
+		if err != nil {
 			return c, err
 		}
-
+		tlsok := tlscfg.RootCAs.AppendCertsFromPEM(cadata)
+		if !tlsok {
+			return c, fmt.Errorf("Internal error while adding CA data to CA pool")
+		}
 	}
-	c, err = ldap.Dial("tcp", a)
+
+	c, err = ldap.DialURL(u, ldap.DialWithDialer(dc), ldap.DialWithTLSConfig(tlscfg))
 	return c, err
 }
 
-func getContextCSN(c *ldap.Conn, b string) (string, error) {
+func getContextCSN(c *ldap.Conn, b string, t int) (string, error) {
 	var search *ldap.SearchRequest
 
 	// assuming access to operational attributes of the base entry can be done anonymously
 	// Note: We limit the number of results to one, becasue entryCSN can be present only once or none at all
-
-	// TODO: Allow time limit to be configured on the command line ?
-	search = ldap.NewSearchRequest(b, ldap.ScopeBaseObject, ldap.NeverDerefAliases, 1, 0, false, "(objectClass=*)", ldapSearchEntryCSN, nil)
+	search = ldap.NewSearchRequest(b, ldap.ScopeBaseObject, ldap.NeverDerefAliases, 1, t, false, "(objectClass=*)", ldapSearchEntryCSN, nil)
 
 	result, err := c.Search(search)
 	if err != nil {

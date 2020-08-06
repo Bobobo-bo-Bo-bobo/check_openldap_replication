@@ -6,5 +6,5 @@ import (
 
 func showUsage() {
 	showVersion()
-	fmt.Printf(helpText, name, defaultCriticalDifference, defaultWarnDifference)
+	fmt.Printf(helpText, name, defaultCriticalDifference, defaultLDAPTimeout, defaultWarnDifference)
 }
