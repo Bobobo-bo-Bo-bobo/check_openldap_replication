@@ -33,9 +33,9 @@ func connect(a string, ssl bool, i bool, ca string) (*ldap.Conn, error) {
 				return c, fmt.Errorf("Internal error while adding CA data to CA pool")
 			}
 
-			c, err = ldap.DialTLS("tcp", a, tlscfg)
-			return c, err
 		}
+		c, err = ldap.DialTLS("tcp", a, tlscfg)
+		return c, err
 
 	}
 	c, err = ldap.Dial("tcp", a)
