@@ -1,7 +1,7 @@
 package main
 
 const name = "check_openldap_replication"
-const version = "1.0.1-20200806"
+const version = "1.1.0"
 
 const versionText = `%s version %s
 Copyright (C) 2020 by Andreas Maus <maus@ypbind.de>
@@ -16,6 +16,7 @@ Build with go version: %s
 
 const defaultWarnDifference = 10
 const defaultCriticalDifference = 20
+const defaultLDAPTimeout = 15
 
 const helpText = `Usage: %s --base=<base> [--ca-cert=<file>] [--critical=<sec>] [--help] --insecure --master=<uri> --slave=<uri> [--version] [--warning=<sec>]
 
@@ -33,6 +34,9 @@ const helpText = `Usage: %s --base=<base> [--ca-cert=<file>] [--critical=<sec>] 
   --master=<uri>    URI of LDAP master. This option is mandatory.
 
   --slave=<uri>     URI of LDAP slave. This option is mandatory.
+
+  --timeout=<sec>   LDAP connection and search timeout in seconds.
+                    Default: %d
 
   --version         Show version information.
 

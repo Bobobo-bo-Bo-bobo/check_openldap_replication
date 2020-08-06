@@ -17,6 +17,7 @@ func main() {
 	var base = flag.String("base", "", "LDAP base")
 	var insecure = flag.Bool("insecure", false, "Skip SSL verification")
 	var cacert = flag.String("ca-cert", "", "CA certificate for SSL")
+	var timeout = flag.Uint("timeout", defaultLDAPTimeout, "Connect and LDAP timeout")
 
 	flag.Usage = showUsage
 	flag.Parse()
@@ -62,22 +63,22 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Error: Warn limit must be less or equal to critical limit")
 		os.Exit(UNKNOWN)
 	}
-
-	cfg, err := buildConfiguration(*master, *slave, *base, *insecure, *cacert)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error: "+err.Error())
+	if *timeout == 0 {
+		fmt.Fprintf(os.Stderr, "Error: Timout limit must be greater than zero")
 		os.Exit(UNKNOWN)
 	}
 
+	cfg := buildConfiguration(*master, *slave, *base, *insecure, *cacert, *timeout)
+
 	// get contextCSN from master
-	mcon, err := connect(cfg.masterAddr, cfg.masterSSL, cfg.InsecureSSL, cfg.CACert)
+	mcon, err := connect(cfg.MasterURI, cfg.InsecureSSL, cfg.CACert, cfg.Timeout)
 	if err != nil {
 		fmt.Println("CRITICAL - " + err.Error())
 		os.Exit(CRITICAL)
 	}
 	defer mcon.Close()
 
-	mcsn, err := getContextCSN(mcon, cfg.Base)
+	mcsn, err := getContextCSN(mcon, cfg.Base, int(*timeout))
 	if err != nil {
 		fmt.Println("CRITICAL - " + err.Error())
 		os.Exit(CRITICAL)
@@ -90,14 +91,14 @@ func main() {
 	}
 
 	// get contextCSN from slave
-	scon, err := connect(cfg.slaveAddr, cfg.slaveSSL, cfg.InsecureSSL, cfg.CACert)
+	scon, err := connect(cfg.SlaveURI, cfg.InsecureSSL, cfg.CACert, cfg.Timeout)
 	if err != nil {
 		fmt.Println("CRITICAL - " + err.Error())
 		os.Exit(CRITICAL)
 	}
 	defer scon.Close()
 
-	scsn, err := getContextCSN(scon, cfg.Base)
+	scsn, err := getContextCSN(scon, cfg.Base, int(*timeout))
 	if err != nil {
 		fmt.Println("CRITICAL - " + err.Error())
 		os.Exit(CRITICAL)
