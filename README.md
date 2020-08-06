@@ -1,3 +1,7 @@
+**_Note:_** Because I'm running my own servers for several years, main development is done at at https://git.ypbind.de/cgit/check_openldap_replication/
+
+----
+
 # Preface
 In larger OpenLDAP setups the data is replicated to one or more OpenLDAP slave servers (e.g. per datacenter and or location).
 To ensure data integrity and consistency the state of the replication should be checked at regular intervals.
