@@ -11,6 +11,8 @@ This check is implemented in Go so, obviously, a Go compiler is required.
 Building this programm requires the [go-ldap.v3](https://github.com/go-ldap/ldap/) library.
 
 # Command line parameters
+:heavy_exclamation_mark: **This check only works with OpenLDAP** :heavy_exclamation_mark:
+
 Bbecause replication meta data is stored in the operational data of the BaseDN and a single server can replicate different BaseDNs from different servers, the BaseDN is mandatory. To compare the replication information the URI of the LDAP master and LDAP slave is required too.
 
 | *Paraemter* | *Description* | *Default* | *Comment* |
